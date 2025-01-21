@@ -1,0 +1,29 @@
+plugins {
+    id 'idea'
+    id 'java'
+    id 'war'
+    id 'org.springframework.boot' version '3.4.1' apply true
+}
+
+dependencies {
+    // https://mvnrepository.com/artifact/com.google.code.gson/gson
+    implementation 'com.google.code.gson:gson:2.11.0'
+    // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.11.4'
+    // https://mvnrepository.com/artifact/junit/junit
+    testImplementation 'junit:junit:4.13.2'
+    // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-engine
+    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.11.4'
+    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-maven-plugin
+    implementation 'org.springframework.boot:spring-boot-maven-plugin:3.4.1'
+
+}
+
+test {
+    useJUnitPlatform()
+}
+
+repositories {
+    mavenCentral()
+    google()
+}
