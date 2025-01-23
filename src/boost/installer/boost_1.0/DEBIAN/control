@@ -1,0 +1,7 @@
+Package: boost
+Version: 1.0
+Section: utils
+Priority: optional
+Architecture: all
+Maintainer: lucheshidi jiangyx2020@gmail.com
+Description: Boost Development Tool

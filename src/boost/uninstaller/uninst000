@@ -1,0 +1,10 @@
+#!/bin/bash
+# 安装路径
+BOOST_INSTALL_DIR="/usr/local/boost"
+BIN_DIR="/usr/local/bin"
+
+# 删除目录
+rm -rf "$BIN_DIR/boost"
+rm -rf $BOOST_INSTALL_DIR
+
+echo "Boost has uninstalled successfully."

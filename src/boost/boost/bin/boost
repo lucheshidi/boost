@@ -1,0 +1,15 @@
+#!/bin/bash
+# boost - Command Line Bootstrapper for Linux/macOS
+
+# 定义 Boost 核心路径
+# BOOST_CORE="$BOOST_HOME/lib/boost-core.jar"
+BOOST_CORE=../lib/boost-core.jar
+
+# 确保核心文件存在
+if [ ! -f "$BOOST_CORE" ]; then
+  echo "Error: Boost core not found in $BOOST_CORE!"
+  exit 1
+fi
+
+# 执行 Java 核心程序
+java -jar "$BOOST_CORE" "$@"
