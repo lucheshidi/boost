@@ -1,8 +1,25 @@
 package com.boost;
 
-import com.boost.annotations.task;
+import com.boost.annotations.Task;
 
-class help extends task {
+class failed extends Task {
+    @Override
+    public void run() {
+
+    }
+
+    @Override
+    public String getName() {
+        return "failed";
+    }
+
+    @Override
+    public boolean isSuccess() {
+        return false;
+    }
+}
+
+class help extends Task {
     @Override
     public void run() {
         System.out.println("""
@@ -15,8 +32,8 @@ help  - show this help
 jar   - build jar file
 
 Example:
-./boostw clean build
-./boostw clean jar
+boost clean build
+boost clean jar
 """);
     }
 
@@ -26,12 +43,7 @@ Example:
     }
 
     @Override
-    public String getDescription() {
-        return "";
-    }
-
-    @Override
-    public String isSuccess() {
-        return "true";
+    public boolean isSuccess() {
+        return true;
     }
 }

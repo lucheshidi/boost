@@ -1,10 +1,13 @@
 package com.boost.annotations;
 
-public abstract class task {
+public abstract class Task {
+    public static void init() {
+
+    }
     public abstract void run();
     public abstract String getName();
-    public abstract String getDescription();
-    public abstract String isSuccess();
+    public String getDescription() { return ""; }
+    public abstract boolean isSuccess();
     public String getUsage() { return ""; }
     public boolean isDefault() { return false; };
 }
