@@ -4,8 +4,10 @@ BOOST_INSTALL_DIR="/usr/local/boost"
 BIN_DIR="/usr/local/bin"
 
 # 下载 Boost 安装包
+echo "Downloading ..."
 wget https://lucheshidi.github.io/boost/boost-1.0.tar.gz
 # 解压 Boost 安装包
+echo "Unpacking ..."
 tar -xzvf boost-1.0.tar.gz -C /usr/local/
 rm -rf ./boost-1.0.tar.gz
 
