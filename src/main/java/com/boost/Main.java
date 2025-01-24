@@ -1,8 +1,11 @@
 package com.boost;
 
+import com.boost.annotations.PrivateTask;
 import com.boost.annotations.Task;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -24,7 +27,7 @@ public class Main {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date = new Date();
         Task help = new help();
-        Task failed = new failed();
+        PrivateTask failed = new failed();
 
         // 创建 Gson 实例
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -36,8 +39,13 @@ public class Main {
                     // Search for a class inheriting task and create an instance
                     Class<?> clazz = Class.forName("com.boost." + arg);
                     if (Task.class.isAssignableFrom(clazz)) {
-                        Task taskInstance = (Task) clazz.getDeclaredConstructor().newInstance();
-                        taskInstance.run();
+                        if (PrivateTask.class.isAssignableFrom(clazz)) {
+                            continue;
+                        }
+                        else {
+                            Task taskInstance = (Task) clazz.getDeclaredConstructor().newInstance();
+                            taskInstance.run();
+                        }
                     }
                     else {
                         System.out.println(Red + "BUILD FAILED!" + Reset);
@@ -62,7 +70,7 @@ public class Main {
             Config config = gson.fromJson(reader, Config.class);
 
             // 获取各个字段值
-            // Sys tem.out.println("Plugins (pl): " + config.getBuild().getPlugins().getPl());
+            // System.out.println("Plugins (pl): " + config.getBuild().getPlugins().getPl());
             // System.out.println("Repository: " + config.getRepository());
             // System.out.println("Dependencies (implementation): " + config.getDependencies().getImplementation());
             // System.out.println("Tasks: " + config.getBuild().getTasks()); // 动态 Map
@@ -73,7 +81,7 @@ public class Main {
             e.fillInStackTrace();
         }
     }
-    public static void isSuccessTask(Task task) {
+    public static void isSuccessTask(@NotNull Task task, String reason) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date = new Date();
 
@@ -84,6 +92,9 @@ public class Main {
         }
         else {
             System.out.println(Red + "BUILD FAILED!" + Reset);
+            if (reason != null) {
+                System.out.println(reason);
+            }
             System.out.println("Finished at: " + dateFormat.format(date) + "\n");
         }
     }

@@ -1,8 +1,9 @@
 package com.boost;
 
+import com.boost.annotations.PrivateTask;
 import com.boost.annotations.Task;
 
-class failed extends Task {
+class failed extends PrivateTask {
     @Override
     public void run() {
 
