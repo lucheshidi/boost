@@ -1,41 +1,94 @@
+import com.boost.annotations.Task;
+import com.boost.TaskActions.*;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import org.jetbrains.annotations.NotNull;
+
+import java.io.FileReader;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 
 public class Main {
+    public static final String Green = "\033[32m";
+    public static final String Yellow = "\033[33m";
+    public static final String Red = "\033[31m";
+    public static final String Blue = "\033[34m";
+    public static final String Magenta = "\033[35m";
+    public static final String Bold = "\033[1m";
+    public static final String Underline = "\033[4m";
+    public static final String Reset = "\033[0m";
+
     public static void main(String[] args) {
-        // 1.设置时间格式
-        /*
-         * yyyy-MM-dd   :   年-月-日  2023-03-25
-         * yyyy.MM.dd   :   年.月.日  2023.03.25
-         * dd.MM.yyyy   :   日.月.年  25.03.2023
-         * yyyy-MM-dd HH:mm:ss   :   年-月-日- 时:分:秒  2023-03-25 16:57:35
-         */
+        // INIT
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
-        // 2.获取时间示例
-        // 示例1
         Date date = new Date();
-        System.out.println("example 1: " + dateFormat.format(new Date()));  //2023-03-25 17:27:20
+        Task help = new help();
 
-        // 示例2
-        Date date1 = new Date();
-        String year = String.format("%tY", date1);       //  %tY - 2023  ；  %ty - 23
-        String month = String.format("%tb", date1);      //  %tb - 三月  ；  %tB - 三月
-        String day = String.format("%te", date1);        //  %te - 25
-        System.out.println("example 1: " + year + "." + month + "." + day); //2023.三月.25
+        // 创建 Gson 实例
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
-        // 示例3
-        Calendar instance = Calendar.getInstance();
-        int year3 = instance.get(Calendar.YEAR);
-        int month3 = instance.get(Calendar.MONTH);
-        int date3 = instance.get(Calendar.DATE);
-        int hour3 = instance.get(Calendar.HOUR_OF_DAY);
-        int minute3 = instance.get(Calendar.MINUTE);
-        int second3 = instance.get(Calendar.SECOND);
-        System.out.println("example 3: " + year3 + "." + month3 + "." + date3 + " " + hour3 + ":" + minute3 + ":" + second3);//2023.2.25 17:27:20
+        // Process `args` and execute tasks accordingly
+        if (args.length > 0) {
+            for (String arg : args) {
+                try {
+                    // Search for a class inheriting task and create an instance
+                    Class<?> clazz = Class.forName("com.boost." + arg);
+                    if (Task.class.isAssignableFrom(clazz)) {
+                        Task taskInstance = (Task) clazz.getDeclaredConstructor().newInstance();
+                        taskInstance.run();
+                        boolean success = taskInstance.isSuccess();
+                        if (success) {
+                            successful.run();
+                        } else if (!success) {
+                            failed.run();
+                        } else {
+                            System.out.println("Unknown Exception occured.");
+                            failed.run();
+                        }
+                    } else {
+                        failed.run();
+                        return;
+                    }
+                } catch (ReflectiveOperationException e) {
+                    failed.run();
+                    return;
+                }
+            }
+        } else {
+            help.run();
+        }
 
-        // 示例4
-        System.out.println("example 2: " + dateFormat.format(System.currentTimeMillis()));//2023-03-25 17:27:20
+        try (FileReader reader = new FileReader("build.json")) {
+            // 将 JSON 文件解析为 Config 对象
+            Config config = gson.fromJson(reader, Config.class);
+
+            // 获取各个字段值
+            // System.out.println("Plugins (pl): " + config.getBuild().getPlugins().getPl());
+            // System.out.println("Repository: " + config.getRepository());
+            // System.out.println("Dependencies (implementation): " + config.getDependencies().getImplementation());
+            // System.out.println("Tasks: " + config.getBuild().getTasks()); // 动态 Map
+            // System.out.println("Example 'print()' task value: " + config.getBuild().getTasks().get("example").get("print()"));
+        } catch (IOException e) {
+            e.fillInStackTrace();
+        }
+    }
+
+    public static void isSuccessTask(@NotNull Task task, String reason) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date = new Date();
+
+        boolean isSuccess = task.isSuccess();
+        if (isSuccess) {
+            System.out.println(Green + "BUILD SUCCESSFUL!" + Reset);
+            System.out.println("Finished at: " + dateFormat.format(date) + "\n");
+        } else {
+            System.out.println(Red + "BUILD FAILED!" + Reset);
+            if (reason != null) {
+                System.out.println(reason);
+            }
+            System.out.println("Finished at: " + dateFormat.format(date) + "\n");
+        }
     }
 }
