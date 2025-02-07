@@ -3,8 +3,10 @@ package com.boost;
 import com.boost.annotations.Task;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.ObjectInputFilter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -22,7 +24,7 @@ public class Main {
         // INIT
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date = new Date();
-        Task help = new help();
+        Task help = new Help();
         boolean allTasksSuccessful = true;
 
         // Process `args` and execute tasks accordingly
@@ -30,7 +32,7 @@ public class Main {
             for (String arg : args) {
                 try {
                     // Search for a class inheriting task and create an instance
-                    Class<?> clazz = Class.forName("com.boost." + arg);
+                    Class<?> clazz = Class.forName("com.boost." + arg.substring(0, 1).toUpperCase() + arg.substring(1).toLowerCase());
                     if (Task.class.isAssignableFrom(clazz)) {
                         Task taskInstance = (Task) clazz.getDeclaredConstructor().newInstance();
                         System.out.println("> Task: " + arg);
@@ -51,24 +53,35 @@ public class Main {
                     allTasksSuccessful = false;
                 }
             }
-        } else {
+        } 
+        else {
             help.run();
         }
 
-        try (FileReader reader = new FileReader("build.json")) {
-            // 将 JSON 文件解析为 Config 对象
-            Gson gson = new GsonBuilder().setPrettyPrinting().create();
-            Config config = gson.fromJson(reader, Config.class);
+        //Test: 打印build.java信息
+        BuildDSL.Build build = new BuildDSL.Build();
 
-            // 获取各个字段值
-            // System.out.println("Plugins (pl): " + config.getBuild().getPlugins().getPl());
-            // System.out.println("Repository: " + config.getRepository());
-            // System.out.println("Dependencies (implementation): " + config.getDependencies().getImplementation());
-            // System.out.println("Tasks: " + config.getBuild().getTasks()); // 动态 Map
-            // System.out.println("Example 'print()' task value: " + config.getBuild().getTasks().get("example").get("print()"));
-        } catch (IOException e) {
-            e.fillInStackTrace();
-        }
+        // 设置构建系统的根信息
+        build.root("com.example", "1.0-SNAPSHOT");
+
+        // 配置插件
+        BuildDSL.Plugins plugins = build.plugins();
+        plugins.pl("com.example.plugin", "1.0.0");
+        plugins.pl("com.android.tools.build:gradle", "7.0.4");
+
+        // 配置任务
+        BuildDSL.Tasks tasks = build.tasks();
+        tasks.task("preBuild", "com.example.preBuildTask");
+        tasks.task("clean", "com.example.cleanTask");
+
+        // 配置依赖项
+        BuildDSL.Dependencies dependencies = build.dependencies();
+        dependencies.implementation("com.google.guava", "guava", "31.0.1-jre");
+        dependencies.implementation("org.apache.logging.log4j", "log4j-core", "2.14.1");
+        dependencies.testImplementation("junit", "junit", "4.13.2");
+
+        // 打印配置详情
+        build.printConfig();
 
         // Print final build status
         if (allTasksSuccessful) {

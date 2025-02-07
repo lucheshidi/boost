@@ -9,7 +9,7 @@ import com.boost.annotations.Task;
 
 import static com.boost.Main.*;
 
-class help extends Task {
+class Help extends Task {
     @Override
     public void run() {
         System.out.println("""
@@ -38,7 +38,7 @@ boost clean jar
     }
 }
 
-class clean extends Task {
+class Clean extends Task {
     boolean success = false;
 
     @Override
@@ -72,7 +72,7 @@ class clean extends Task {
 
     @Override
     public String getName() {
-        return null;
+        return "clean";
     }
 
     @Override
@@ -82,7 +82,7 @@ class clean extends Task {
     
 }
 
-class build extends Task {
+class Build extends Task {
     @Override
     public void run() {
         
@@ -100,7 +100,7 @@ class build extends Task {
     }
 }
 
-class compileClasses extends Task {
+class CompileClasses extends Task {
     @Override
     public void run() {
         List<String> commands = new ArrayList<>();
