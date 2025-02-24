@@ -10,4 +10,5 @@ public abstract class Task {
     public abstract boolean isSuccess();
     public String getUsage() { return ""; }
     public boolean isDefault() { return false; };
+    public abstract String getChildTasks();
 }

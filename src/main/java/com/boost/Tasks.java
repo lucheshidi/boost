@@ -16,7 +16,7 @@ class Help extends Task {
 Boost help:
 
 Tasks:
-build - build jar file
+build - build project
 clean - clean build directory and jar file
 help  - show this help
 jar   - build jar file
@@ -35,6 +35,11 @@ boost clean jar
     @Override
     public boolean isSuccess() {
         return true;
+    }
+
+    @Override
+    public String getChildTasks() {
+        return null;
     }
 }
 
@@ -79,6 +84,11 @@ class Clean extends Task {
     public boolean isSuccess() {
         return true;
     }
+
+    @Override
+    public String getChildTasks() {
+        return null;
+    }
     
 }
 
@@ -97,6 +107,11 @@ class Build extends Task {
     @Override
     public boolean isSuccess() {
         return false;
+    }
+
+    @Override
+    public String getChildTasks() {
+        return null;
     }
 }
 
@@ -140,5 +155,10 @@ class CompileClasses extends Task {
     public boolean isSuccess() {
         File buildDir = new File("build/classes");
         return buildDir.exists() && buildDir.isDirectory();
+    }
+
+    @Override
+    public String getChildTasks() {
+        return null;
     }
 }

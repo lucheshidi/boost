@@ -1,3 +1,6 @@
+package com.boost;
+
+import com.boost.*;
 import com.boost.annotations.Task;
 import com.boost.TaskActions.*;
 
@@ -24,7 +27,7 @@ public class Main {
         // INIT
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date = new Date();
-        Task help = new help();
+        Task help = new Help();
 
         // 创建 Gson 实例
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -58,20 +61,6 @@ public class Main {
             }
         } else {
             help.run();
-        }
-
-        try (FileReader reader = new FileReader("build.json")) {
-            // 将 JSON 文件解析为 Config 对象
-            Config config = gson.fromJson(reader, Config.class);
-
-            // 获取各个字段值
-            // System.out.println("Plugins (pl): " + config.getBuild().getPlugins().getPl());
-            // System.out.println("Repository: " + config.getRepository());
-            // System.out.println("Dependencies (implementation): " + config.getDependencies().getImplementation());
-            // System.out.println("Tasks: " + config.getBuild().getTasks()); // 动态 Map
-            // System.out.println("Example 'print()' task value: " + config.getBuild().getTasks().get("example").get("print()"));
-        } catch (IOException e) {
-            e.fillInStackTrace();
         }
     }
 
