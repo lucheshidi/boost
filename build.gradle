@@ -21,7 +21,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-maven-plugin:3.4.1'
     // https://mvnrepository.com/artifact/org.jetbrains/annotations
     implementation 'org.jetbrains:annotations:26.0.2'
-
+    // https://mvnrepository.com/artifact/org.codehaus.groovy/groovy
+    implementation 'org.codehaus.groovy:groovy:3.0.23'
 }
 
 test {
@@ -30,5 +31,30 @@ test {
 
 repositories {
     mavenCentral()
+    mavenLocal()
     google()
+}
+
+// 复制外部的 build.boost.kts 文件到构建目录，方便运行时管理
+tasks.register('copyBuildFile') {
+    doLast {
+        def externalFile = file('build.boost.kts')
+        def outputDir = file("${buildDir}/resources/external")
+        if (!externalFile.exists()) {
+            throw new GradleException("Missing required file: external/build.boost.kts")
+        }
+        copy {
+            from externalFile
+            into outputDir
+        }
+        println "Copied build.boost.kts to ${outputDir}"
+    }
+}
+
+// 设置 JAR 打包任务，确保包含外部 DSL 文件
+jar {
+    dependsOn('copyBuildFile')
+    from("external/") { // 把 external 覆盖到 JAR
+        into "external/"
+    }
 }

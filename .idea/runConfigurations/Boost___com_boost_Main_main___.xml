@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name=":main:Main" type="Application" factoryName="Application">
+  <configuration default="false" name="Boost [:com.boost.Main.main()]" type="Application" factoryName="Application">
     <option name="MAIN_CLASS_NAME" value="com.boost.Main" />
     <module name="Boost.main" />
     <extension name="coverage">

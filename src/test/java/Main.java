@@ -1,15 +1,12 @@
 package com.boost;
 
-import com.boost.*;
-import com.boost.annotations.Task;
+import com.boost.annotations.task;
 import com.boost.TaskActions.*;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.FileReader;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -27,7 +24,7 @@ public class Main {
         // INIT
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date = new Date();
-        Task help = new Help();
+        task help = new Help();
 
         // 创建 Gson 实例
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -38,8 +35,8 @@ public class Main {
                 try {
                     // Search for a class inheriting task and create an instance
                     Class<?> clazz = Class.forName("com.boost." + arg);
-                    if (Task.class.isAssignableFrom(clazz)) {
-                        Task taskInstance = (Task) clazz.getDeclaredConstructor().newInstance();
+                    if (task.class.isAssignableFrom(clazz)) {
+                        task taskInstance = (task) clazz.getDeclaredConstructor().newInstance();
                         taskInstance.run();
                         boolean success = taskInstance.isSuccess();
                         if (success) {
@@ -64,7 +61,7 @@ public class Main {
         }
     }
 
-    public static void isSuccessTask(@NotNull Task task, String reason) {
+    public static void isSuccessTask(@NotNull task task, String reason) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date = new Date();
 
