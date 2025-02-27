@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Boost Jar" type="JarApplication">
+  <configuration default="false" name="boost-1.0.jar" type="JarApplication">
     <option name="JAR_PATH" value="$PROJECT_DIR$/build/libs/Boost-1.0-SNAPSHOT.jar" />
     <option name="PROGRAM_PARAMETERS" value="clean help" />
     <option name="ALTERNATIVE_JRE_PATH" />

@@ -1,5 +1,6 @@
 package com.boost;
 
+import com.boost.annotations.Logging.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -13,6 +14,11 @@ import java.util.List;
  * DSL 文件解析器
  */
 public class BoostDSLParser {
+    /**
+     * 日志输出
+     * @implNote 通过 Logger 进行输出
+     */
+    private static final Logger log = new Logger();
 
     /**
      * 核心解析方法
@@ -23,9 +29,9 @@ public class BoostDSLParser {
         try {
             List<String> lines = Files.readAllLines(Path.of(filePath));
             parseDSL(lines);
-        } catch (IOException e) {
-            System.out.println("Error: Failed to read DSL file at " + filePath);
-            e.printStackTrace();
+        }
+        catch (IOException e) {
+            log.error("Failed to read DSL file at %s. Detail: %s", filePath, e.getMessage());
         }
     }
 
@@ -43,19 +49,23 @@ public class BoostDSLParser {
             if (line.endsWith("{")) {
                 if (currentBlock != null) {
                     blockContent.add(line);
-                } else {
+                }
+                else {
                     currentBlock = line.substring(0, line.indexOf("{")).trim();
                 }
-            } else if (line.equals("}")) {
+            }
+            else if (line.equals("}")) {
                 if (!blockContent.isEmpty()) {
                     handleBlock(currentBlock, blockContent);
                     blockContent.clear();
                 }
                 currentBlock = null;
-            } else if (currentBlock != null) {
+            }
+            else if (currentBlock != null) {
                 blockContent.add(line);
-            } else {
-                System.out.println("Unknown command: " + line);
+            }
+            else {
+                log.error("Unknown line <%s>", line);
             }
         }
     }
@@ -64,14 +74,14 @@ public class BoostDSLParser {
      * 处理不同块内容
      */
     private static void handleBlock(String blockName, List<String> content) {
-        System.out.println("\nProcessing block: " + blockName);
+        log.info("Processing block: %s", blockName);
         switch (blockName) {
             case "root" -> handleRoot(content);
             case "ext" -> handleExt(content);
             case "plugins" -> handlePlugins(content);
             case "tasks" -> handleTasks(content);
             case "dependencies" -> handleDependencies(content);
-            default -> System.out.println("Unknown block: " + blockName);
+            default -> log.warn("Unknown block: %s", blockName);
         }
     }
 
@@ -81,7 +91,7 @@ public class BoostDSLParser {
                 String[] parts = line.split("=");
                 String key = parts[0].trim();
                 String value = parts[1].trim().replace("\"", "");
-                System.out.printf("Property set: %s = %s%n", key, value);
+                log.info("Property set: %s = %s", key, value);
             }
         }
     }
@@ -97,14 +107,11 @@ public class BoostDSLParser {
     private static void handleTasks(List<String> content) {
         for (String line : content) {
             if (line.startsWith("tasks.register")) {
-                // 提取任务名称
                 String taskName = extractArgumentsFromTaskRegister(line);
-
-                // 如果任务名称存在，则注册动态任务
                 if (taskName != null) {
-                    Tasks.registerDynamicTask(taskName, () -> {
-                        System.out.printf("Running dynamically registered task: %s%n", taskName);
-                    });
+                    Tasks.registerDynamicTask(taskName, () ->
+                            log.info("Running dynamically registered task: %s", taskName)
+                    );
                 }
             }
         }
@@ -113,9 +120,8 @@ public class BoostDSLParser {
     private static void handleDependencies(@NotNull List<String> content) {
         for (String line : content) {
             if (line.contains("dep") || line.contains("testDep")) {
-                // 解析依赖逻辑
                 String depInfo = extractArguments(line);
-                System.out.println("Dependency added: " + depInfo);
+                log.info("Dependency added: %s", depInfo);
             }
         }
     }
@@ -130,16 +136,14 @@ public class BoostDSLParser {
     }
 
     private static @Nullable String extractArgumentsFromTaskRegister(String line) {
-        // 定义匹配规则：提取 tasks.register("taskName") 中的 taskName
         String pattern = "tasks\\.register\\(\"(.*?)\"\\)";
         java.util.regex.Pattern regex = java.util.regex.Pattern.compile(pattern);
         java.util.regex.Matcher matcher = regex.matcher(line);
 
-        // 判断是否符合规则
         if (matcher.find()) {
-            return matcher.group(1); // 返回第一个捕获组，即任务名称
+            return matcher.group(1);
         }
 
-        return null; // 如果未匹配到，返回 null
+        return null;
     }
 }

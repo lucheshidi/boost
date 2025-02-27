@@ -9,6 +9,7 @@ import java.util.Map;
 
 import com.boost.TaskActions.failed;
 import com.boost.TaskActions.successful;
+import com.boost.annotations.Logging.Logger;
 import com.boost.annotations.task;
 
 import static com.boost.Main.*;
@@ -223,6 +224,8 @@ class dependencies extends task {
 }
 
 public class Tasks {
+    // 定义 log
+    private static final Logger log = new Logger();
     // 任务注册表：包含所有静态任务和动态任务
     private static final Map<String, task> TASK_REGISTRY = new HashMap<>();
 
@@ -252,7 +255,8 @@ public class Tasks {
     public static void register(task newTask) {
         if (newTask != null && !TASK_REGISTRY.containsKey(newTask.getName())) {
             TASK_REGISTRY.put(newTask.getName(), newTask);
-            System.out.println("Task registered: " + newTask.getName());
+            // System.out.println("Task registered: " + newTask.getName());
+            log.info("Task registered: " + newTask.getName());
         }
     }
 
