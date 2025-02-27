@@ -21,10 +21,12 @@ jobs:
     steps:
       - run: sudo apt install openjdk-21-jdk*
       - name: Set up JDK 21
+        run: java -version
       - with:
           java-version: '21'
           distribution: 'temurin'
-        run: java -version
+        run: sudo snap install gradle:latest
+
 
       # Configure Gradle for optimal use in GitHub Actions, including caching of downloaded dependencies.
       # See: https://github.com/gradle/actions/blob/main/setup-gradle/README.md
@@ -52,9 +54,9 @@ jobs:
       contents: write
 
     steps:
-      - run: sudo apt install openjdk-21-jdk
+      - run: sudo apt install openjdk-21-jdk*
       - name: Set up JDK 21
-        run: java -version
+        run: sudo snap install gradle:latest
         with:
           java-version: '21'
           distribution: 'temurin'

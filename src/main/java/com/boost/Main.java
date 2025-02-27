@@ -30,6 +30,7 @@ public class Main {
 
         // 模拟解析 DSL 文件（注册动态任务）
         BoostDSLParser.parse("build.boost.kts");
+        BoostDSLParser.parse("build.boost.java");
 
         // 检查输入参数
         if (args.length == 0) {

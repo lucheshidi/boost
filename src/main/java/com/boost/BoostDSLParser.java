@@ -1,5 +1,8 @@
 package com.boost;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -107,7 +110,7 @@ public class BoostDSLParser {
         }
     }
 
-    private static void handleDependencies(List<String> content) {
+    private static void handleDependencies(@NotNull List<String> content) {
         for (String line : content) {
             if (line.contains("dep") || line.contains("testDep")) {
                 // 解析依赖逻辑
@@ -117,7 +120,7 @@ public class BoostDSLParser {
         }
     }
 
-    private static String extractArguments(String line) {
+    private static @NotNull String extractArguments(@NotNull String line) {
         int start = line.indexOf("(");
         int end = line.indexOf(")");
         if (start != -1 && end != -1) {
@@ -126,7 +129,7 @@ public class BoostDSLParser {
         return "No arguments";
     }
 
-    private static String extractArgumentsFromTaskRegister(String line) {
+    private static @Nullable String extractArgumentsFromTaskRegister(String line) {
         // 定义匹配规则：提取 tasks.register("taskName") 中的 taskName
         String pattern = "tasks\\.register\\(\"(.*?)\"\\)";
         java.util.regex.Pattern regex = java.util.regex.Pattern.compile(pattern);

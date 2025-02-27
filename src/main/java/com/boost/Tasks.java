@@ -304,7 +304,7 @@ public class Tasks {
         }
 
         // 执行当前任务
-        System.out.printf(Bold + "Task> " + Reset + "%s%n", taskName);
+        System.out.printf(Bold + "Task> " + Reset + Underline + "%s%n", taskName);
         currentTask.run();
 
         // 检查任务是否成功并记录状态
