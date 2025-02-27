@@ -2,7 +2,9 @@ plugins {
     id 'idea'
     id 'java'
     id 'war'
+
     id 'org.springframework.boot' version '3.4.1' apply true
+    id 'application'
 }
 
 group = "com.boost"
